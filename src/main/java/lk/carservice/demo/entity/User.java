@@ -2,7 +2,7 @@ package lk.carservice.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.context.annotation.Role;
+
 
 @Data
 @Entity
