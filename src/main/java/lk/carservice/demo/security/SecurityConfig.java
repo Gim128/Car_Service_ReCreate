@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,21 +25,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/users/signup").permitAll() // Allow signup for everyone
-                .requestMatchers("/admin/**").hasRole("ADMIN") // Admin-only endpoints
-                .requestMatchers("/user/**").hasRole("USER") // User-only endpoints
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login") // Custom login page
-                .defaultSuccessUrl("/redirect", true) // Redirect based on role
-                .permitAll()
-                .and()
-                .logout()
-                .logoutSuccessUrl("/login")
-                .permitAll();
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/users/signup").permitAll() // Allow signup for everyone
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // Admin-only endpoints
+                        .requestMatchers("/user/**").hasRole("USER") // User-only endpoints
+                        .anyRequest().authenticated() // All other requests require authentication
+                )
+                .formLogin(form -> form
+                        .loginPage("/login") // Custom login page
+                        .defaultSuccessUrl("/redirect", true) // Redirect based on role
+                        .permitAll() // Allow everyone to access the login page
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login") // Redirect to login page after logout
+                        .permitAll() // Allow everyone to access the logout endpoint
+                );
 
         return http.build();
     }
