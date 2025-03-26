@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Year;
 import java.util.List;
-import java.util.Optional;
+
 
 @Repository
 public interface CarRepository extends JpaRepository<Car,Long> {
@@ -15,7 +15,7 @@ public interface CarRepository extends JpaRepository<Car,Long> {
     List<Car> findByRegisteredYear(Year year);
     List<Car> findByRegisteredYearBetween(Year start, Year end);
     List<Car> findByCategory(String category);
-    List<Car> findByManufacturer(String manufacturer);
-    Car findByName(String name);
+//    List<Car> findByManufacturer(String manufacturer);
+//    Car findByName(String name);
     List<Car> findByIsActive(Boolean isActive);
 }

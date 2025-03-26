@@ -1,7 +1,6 @@
 package lk.carservice.demo.controller;
 
 import lk.carservice.demo.entity.Car;
-import lk.carservice.demo.repository.CarRepository;
 import lk.carservice.demo.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

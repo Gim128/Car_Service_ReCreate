@@ -2,7 +2,6 @@ package lk.carservice.demo.service;
 
 import lk.carservice.demo.entity.Car;
 import lk.carservice.demo.exceptions.CarNotFoundException;
-import lk.carservice.demo.exceptions.DuplicateNameException;
 import lk.carservice.demo.repository.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
