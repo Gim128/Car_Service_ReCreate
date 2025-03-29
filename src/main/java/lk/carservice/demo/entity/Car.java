@@ -13,22 +13,22 @@ public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "car_id")
+    @Column(name = "car_id", nullable = false)
     private Long car_id;
 
-    @Column(nullable = false)
+    @Column(name = "Car_name", nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "car_description", nullable = false)
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "car_category", nullable = false)
     private String category;
 
-    @Column(nullable = false)
+    @Column(name = "car_manufacturer", nullable = false)
     private String manufacturer;
 
-    @Column(nullable = false)
+    @Column(name = "car_price", nullable = false)
     private Double price;
 
     @Column(name = "manufactured_year", nullable = false)
@@ -37,15 +37,7 @@ public class Car {
     @Column(name = "registered_year", nullable = false)
     private Year registeredYear;
 
-    @Column(nullable = false)
+    @Column(name = "is_active", columnDefinition = "TINYINT(1) default 1")
     private Boolean isActive = true;
-
-//    public Year getRegisteredYear() {
-//        return this.Registered_Year;
-//    }
-//
-//    public void setRegisteredYear(Year registeredYear) {
-//        this.Registered_Year = registeredYear;
-//    }
 
 }
