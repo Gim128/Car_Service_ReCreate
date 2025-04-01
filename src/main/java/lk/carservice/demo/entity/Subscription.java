@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "subscriptiona")
+@Table(name = "subscription")
 public class Subscription {
 
     @Id

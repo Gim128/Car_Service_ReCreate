@@ -48,12 +48,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<SubscriptionResponseDTO> getSubscriptionByUser(Integer userId) {
-        return subscriptionRepository.findByUserId(userId).stream()
-                .map(subscription -> modelMapper.map(subscription, SubscriptionResponseDTO.class))
-                .collect(Collectors.toList());
-    }
+//    @Override
+//    public List<SubscriptionResponseDTO> getSubscriptionByUser(Integer userId) {
+//        return subscriptionRepository.findByUserId(userId).stream()
+//                .map(subscription -> modelMapper.map(subscription, SubscriptionResponseDTO.class))
+//                .collect(Collectors.toList());
+//    }
 
     @Override
     public SubscriptionResponseDTO updateSubscription(int id, SubscriptionDTO subscriptionDTO) {

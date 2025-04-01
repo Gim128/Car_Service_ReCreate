@@ -10,7 +10,7 @@ public interface SubscriptionService {
     SubscriptionResponseDTO createSubscription(SubscriptionDTO subscriptionDTO);
     SubscriptionResponseDTO getSubscriptionById(Integer subscriptionId);
     List<SubscriptionResponseDTO> getAllSubscriptions();
-    List<SubscriptionResponseDTO> getSubscriptionByUser(Integer userId);
+//    List<SubscriptionResponseDTO> getSubscriptionByUser(Integer userId);
     SubscriptionResponseDTO updateSubscription(int id, SubscriptionDTO subscriptionDTO);
     void deleteSubscription(int id);
     List<SubscriptionResponseDTO> getSubscriptionByPriceRange(BigDecimal minPrice, BigDecimal maxPrice);
