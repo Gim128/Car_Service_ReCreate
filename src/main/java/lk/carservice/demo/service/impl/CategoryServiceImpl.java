@@ -1,8 +1,7 @@
 package lk.carservice.demo.service.impl;
 
 import jakarta.transaction.Transactional;
-import lk.carservice.demo.dto.CategoryDTO;
-import lk.carservice.demo.dto.CategoryResponseDTO;
+import lk.carservice.demo.dto.*;
 import lk.carservice.demo.entity.Category;
 import lk.carservice.demo.exceptions.ResourceNotFoundException;
 import lk.carservice.demo.repository.CategoryRepository;
@@ -28,6 +27,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public SparePartsCategoryResponseDTO createCategory(SparePartsCategoryDTO sparePartsCategoryDTO) {
+        Category category = modelMapper.map(sparePartsCategoryDTO, Category.class);
+        category.setIsDeleted(false);
+        Category savedCategory = categoryRepository.save(category);
+        return modelMapper.map(savedCategory, SparePartsCategoryResponseDTO.class);
+    }
+
+    @Override
     public CategoryResponseDTO createCategory(CategoryDTO categoryDTO) {
         Category category = modelMapper.map(categoryDTO, Category.class);
         category.setIsDeleted(false);
@@ -47,7 +54,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findAll().stream()
                 .filter(category -> !category.getIsDeleted())
                 .map(category -> modelMapper.map(category, CategoryResponseDTO.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()).reversed();
     }
 
     @Override
@@ -55,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findByIsActiveTrue().stream()
                 .filter(category -> !category.getIsDeleted())
                 .map(category -> modelMapper.map(category, CategoryResponseDTO.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()).reversed();
     }
 
     @Override
