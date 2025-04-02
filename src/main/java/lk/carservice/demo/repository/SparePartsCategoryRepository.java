@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface SparePartsCategoryRepository extends JpaRepository<SparePartsCategory,Integer> {
 
-    List<SparePartsCategory> findBySparePartsCategoryId(Integer sparePartsCategoryId);
+//    List<SparePartsCategory> findBySparePartsCategoryId(Integer sparePartsCategoryId);
     List<SparePartsCategory> findByIsCategoryActiveTrue();
-    List<SparePartsCategory> findBySparePartsCategoryNameContainingIgnoreCase(String name);
+//    List<SparePartsCategory> findBySparePartsCategoryNameContainingIgnoreCase(String name);
 }
