@@ -26,13 +26,13 @@ public class CategoryServiceImpl implements CategoryService {
         this.modelMapper = modelMapper;
     }
 
-    @Override
-    public SparePartsCategoryResponseDTO createCategory(SparePartsCategoryDTO sparePartsCategoryDTO) {
-        Category category = modelMapper.map(sparePartsCategoryDTO, Category.class);
-        category.setIsDeleted(false);
-        Category savedCategory = categoryRepository.save(category);
-        return modelMapper.map(savedCategory, SparePartsCategoryResponseDTO.class);
-    }
+//    @Override
+//    public SparePartsCategoryResponseDTO createCategory(SparePartsCategoryDTO sparePartsCategoryDTO) {
+//        Category category = modelMapper.map(sparePartsCategoryDTO, Category.class);
+//        category.setIsDeleted(false);
+//        Category savedCategory = categoryRepository.save(category);
+//        return modelMapper.map(savedCategory, SparePartsCategoryResponseDTO.class);
+//    }
 
     @Override
     public CategoryResponseDTO createCategory(CategoryDTO categoryDTO) {
