@@ -1,5 +1,6 @@
 package lk.carservice.demo.service.impl;
 
+import jakarta.transaction.Transactional;
 import lk.carservice.demo.dto.PaymentDTO;
 import lk.carservice.demo.dto.PaymentResponseDTO;
 import lk.carservice.demo.entity.Payment;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class PaymentServiceImpl implements PaymentService {
 
     private final PaymentRepository paymentRepository;

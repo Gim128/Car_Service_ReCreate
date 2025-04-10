@@ -57,4 +57,9 @@ public class GlobalExceptionHandler{
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Data integrity violation: " + Objects.requireNonNull(ex.getRootCause()).getMessage());
     }
+
+    @ExceptionHandler(BookingConflictException.class)
+    public ResponseEntity<String> handleBookingConflictException(BookingConflictException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
