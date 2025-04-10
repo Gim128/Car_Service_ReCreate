@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Objects;
+
 @ControllerAdvice
 public class GlobalExceptionHandler{
 
@@ -53,6 +55,6 @@ public class GlobalExceptionHandler{
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Data integrity violation: " + ex.getRootCause().getMessage());
+                .body("Data integrity violation: " + Objects.requireNonNull(ex.getRootCause()).getMessage());
     }
 }

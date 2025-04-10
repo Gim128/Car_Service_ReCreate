@@ -2,7 +2,6 @@ package lk.carservice.demo.service;
 
 import lk.carservice.demo.dto.PaymentDTO;
 import lk.carservice.demo.dto.PaymentResponseDTO;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
