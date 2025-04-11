@@ -8,6 +8,7 @@ import lk.carservice.demo.exceptions.ResourceNotFoundException;
 import lk.carservice.demo.exceptions.ReviewModificationException;
 import lk.carservice.demo.repository.ReviewRepository;
 import lk.carservice.demo.service.ReviewService;
+import lk.carservice.demo.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

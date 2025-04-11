@@ -1,10 +1,11 @@
 package lk.carservice.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 
 @Data
@@ -18,16 +19,16 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
-    private int user_id;
+    private int userId;
 
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     @Column(name = "first_name", nullable = false)
-    private String first_name;
+    private String firstName;
 
     @Column(name = "last_name", unique = true, nullable = false)
-    private String last_name;
+    private String lastName;
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
@@ -45,8 +46,29 @@ public class User {
     @Column(name = "mobile", nullable = false)
     private String mobile;
 
-    @Column(name = "is_active", columnDefinition = "TINYINT(1) default 1")
-    private Boolean is_active;
+//    @Column(name = "is_active", columnDefinition = "TINYINT(1) default 1")
+//    private Boolean is_active;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Getter
+    @Column(name = "user_type", nullable = false)
+    private Integer userType;
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
 
     public enum Role {
         ADMIN,

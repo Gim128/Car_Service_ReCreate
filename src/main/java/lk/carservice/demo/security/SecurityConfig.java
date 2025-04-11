@@ -25,6 +25,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users/signup").permitAll() // Allow signup for everyone
@@ -41,6 +42,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login") // Redirect to login page after logout
                         .permitAll() // Allow everyone to access the logout endpoint
                 );
+
 
         return http.build();
     }
