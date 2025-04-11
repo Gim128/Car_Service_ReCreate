@@ -1,15 +1,18 @@
 package lk.carservice.demo.controller;
 
-import lk.carservice.demo.entity.Car;
+import jakarta.validation.Valid;
+import lk.carservice.demo.dto.CarDTO;
+import lk.carservice.demo.dto.CarResponseDTO;
 import lk.carservice.demo.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/car")
+@RequestMapping("/api/cars")
 public class CarController {
 
     private final CarService carService;
@@ -20,44 +23,50 @@ public class CarController {
     }
 
     @PostMapping
-    public ResponseEntity<Car> crearCar(@RequestBody Car carDetails) {
-        Car car = carService.createCar(carDetails);
-        return ResponseEntity.ok().body(car);
+    public ResponseEntity<CarResponseDTO> createCar(@Valid @RequestBody CarDTO carDTO) {
+        CarResponseDTO createdCar = carService.createCar(carDTO);
+        return new ResponseEntity<>(createdCar, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{carId}")
+    public ResponseEntity<CarResponseDTO> getCarById(@PathVariable Integer carId) {
+        return ResponseEntity.ok(carService.getCarById(carId));
     }
 
     @GetMapping
-    public ResponseEntity<List<Car>> getAllCarParts() {
-        List<Car> carParts = carService.getAllCars();
-        return ResponseEntity.ok(carParts);
+    public ResponseEntity<List<CarResponseDTO>> getAllCars(
+            @RequestParam(required = false) Integer userId,
+            @RequestParam(required = false) String make,
+            @RequestParam(required = false) String model,
+            @RequestParam(required = false) Integer minYear,
+            @RequestParam(required = false) Integer maxYear) {
+
+        if (userId != null) {
+            return ResponseEntity.ok(carService.getCarsByUser(userId));
+        }
+        return ResponseEntity.ok(carService.searchCars(make, model, minYear, maxYear));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Car> getCarPartById(@PathVariable Long id) {
-        Car carPart = carService.getCarById(id);
-        return ResponseEntity.ok(carPart);
+    @PutMapping("/{carId}")
+    public ResponseEntity<CarResponseDTO> updateCar(
+            @PathVariable Integer carId,
+            @Valid @RequestBody CarDTO carDTO) {
+        return ResponseEntity.ok(carService.updateCar(carId, carDTO));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Car> updateCarPart(@PathVariable Long id, @RequestBody Car carDetails) {
-        Car updatedCarPart = carService.updateCar(id, carDetails);
-        return ResponseEntity.ok(updatedCarPart);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCarPart(@PathVariable Long id) {
-        carService.deleteCarPart(id);
+    @DeleteMapping("/{carId}")
+    public ResponseEntity<Void> deleteCar(@PathVariable Integer carId) {
+        carService.deleteCar(carId);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<Car>> getCarPartsByCategory(@PathVariable String category) {
-        List<Car> carParts = carService.getCarPartsByCategory(category);
-        return ResponseEntity.ok(carParts);
+    @PostMapping("/{carId}/activate")
+    public ResponseEntity<CarResponseDTO> activateCar(@PathVariable Integer carId) {
+        return ResponseEntity.ok(carService.activateCar(carId));
     }
 
-    @GetMapping("/active")
-    public ResponseEntity<List<Car>> getActiveCarParts() {
-        List<Car> carParts = carService.getActiveCarParts();
-        return ResponseEntity.ok(carParts);
+    @PostMapping("/{carId}/deactivate")
+    public ResponseEntity<CarResponseDTO> deactivateCar(@PathVariable Integer carId) {
+        return ResponseEntity.ok(carService.deactivateCar(carId));
     }
 }

@@ -4,18 +4,19 @@ import lk.carservice.demo.entity.Car;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.Year;
 import java.util.List;
 
-
 @Repository
-public interface CarRepository extends JpaRepository<Car,Long> {
-//    List<Car> findByCarId(Long car_id);
-//    Optional<Car> findByCarId(Long carId);
-    List<Car> findByRegisteredYear(Year year);
-    List<Car> findByRegisteredYearBetween(Year start, Year end);
-    List<Car> findByCategory(String category);
-//    List<Car> findByManufacturer(String manufacturer);
-//    Car findByName(String name);
-    List<Car> findByIsActive(Boolean isActive);
+public interface CarRepository extends JpaRepository<Car, Integer> {
+    List<Car> findByUserId(Integer userId);
+
+    List<Car> findByMake(String make);
+
+    List<Car> findByMakeAndModel(String make, String model);
+
+    List<Car> findByYearBetween(Integer startYear, Integer endYear);
+
+    boolean existsByLicensePlate(String licensePlate);
+
+    boolean existsByVin(String vin);
 }

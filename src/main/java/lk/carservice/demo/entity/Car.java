@@ -1,6 +1,7 @@
 package lk.carservice.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,31 +20,45 @@ public class Car {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "car_id", nullable = false)
-    private Long car_id;
+    @Column(name = "car_id")
+    private Integer carId;
 
-    @Column(name = "Car_name", nullable = false)
-    private String name;
+    @Column(name = "make", nullable = false, length = 50)
+    @NotBlank(message = "Make is required")
+    @Size(max = 50, message = "Make must be less than 50 characters")
+    private String make;
 
-    @Column(name = "car_description", nullable = false)
-    private String description;
+    @Column(name = "model", nullable = false, length = 50)
+    @NotBlank(message = "Model is required")
+    @Size(max = 50, message = "Model must be less than 50 characters")
+    private String model;
 
-    @Column(name = "car_category", nullable = false)
-    private String category;
+    @Column(name = "year", nullable = false)
+    @NotNull(message = "Year is required")
+    @Min(value = 1900, message = "Year must be after 1900")
+    @Max(value = 2100, message = "Year must be before 2100")
+    private Integer year;
 
-    @Column(name = "car_manufacturer", nullable = false)
-    private String manufacturer;
+    @Column(name = "license_plate", unique = true, length = 20)
+    @Size(max = 20, message = "License plate must be less than 20 characters")
+    private String licensePlate;
 
-    @Column(name = "car_price", nullable = false)
-    private Double price;
+    @Column(name = "vin", unique = true, length = 17)
+    @Size(min = 17, max = 17, message = "VIN must be exactly 17 characters")
+    private String vin;
 
-    @Column(name = "manufactured_year", nullable = false)
-    private Year Manufactured_Year;
+    @Column(name = "color", length = 30)
+    @Size(max = 30, message = "Color must be less than 30 characters")
+    private String color;
 
-    @Column(name = "registered_year", nullable = false)
-    private Year registeredYear;
+    @Column(name = "mileage")
+    @Min(value = 0, message = "Mileage cannot be negative")
+    private Integer mileage;
 
-    @Column(name = "is_active", columnDefinition = "TINYINT(1) default 1")
+    @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
+
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
 }
