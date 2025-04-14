@@ -1,47 +1,62 @@
 package lk.carservice.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Table(name = "admin_users")
+@Getter
+@Setter
+@Table(name = "admin")
 public class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_id", unique = true)
-    private int admin_id;
+    private int adminId;
 
-    @Column(name = "admin_username", unique = true, nullable = false) // Add this field
+    @Column(name = "username", unique = true, nullable = false, length = 50)
     private String username;
 
-    @Column(name = "admin_email", unique = true, nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "admin_password", nullable = false)
-    private String password;
+    @Column(name = "password_hash", nullable = false)
+    private String passwordHash;
+
+    @Column(name = "full_name", nullable = false, length = 100)
+    private String fullName;
+
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true;
+
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
 
     @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "admin_joined_date", updatable = false)
-    private Date adminJoinedDate;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    @Column(name = "role", nullable = false)
-    private String role = "ADMIN";
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-    @Column(name = "is_active", columnDefinition = "TINYINT(1) default 1")
-    private boolean is_active = true;
+    @Column(name = "role", nullable = false, length = 20)
+    private String role = "ADMIN"; // ADMIN, SUPER_ADMIN
 
-    @Column(name = "is_deleted", columnDefinition = "TINYINT(1) default 0")
-    private Boolean isDeleted;
+    public Integer getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(Integer adminId) {
+        this.adminId = adminId;
+    }
+
 }

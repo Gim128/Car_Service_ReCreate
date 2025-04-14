@@ -1,49 +1,77 @@
 package lk.carservice.demo.controller;
 
-import lk.carservice.demo.entity.Admin;
+import jakarta.validation.Valid;
+import lk.carservice.demo.dto.AdminDTO;
+import lk.carservice.demo.dto.AdminResponseDTO;
 import lk.carservice.demo.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/admins")
+@RequestMapping("/api/admins")
 public class AdminController {
 
+    private final AdminService adminService;
+
     @Autowired
-    private AdminService adminService;
+    public AdminController(AdminService adminService) {
+        this.adminService = adminService;
+    }
 
     @PostMapping
-    public ResponseEntity<Admin> createAdmin(@RequestBody Admin admin){
-        Admin createAdmin = adminService.createAdmin(admin);
-        return ResponseEntity.ok(createAdmin);
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<AdminResponseDTO> createAdmin(@Valid @RequestBody AdminDTO adminDTO) {
+        AdminResponseDTO createdAdmin = adminService.createAdmin(adminDTO);
+        return new ResponseEntity<>(createdAdmin, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{adminId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    public ResponseEntity<AdminResponseDTO> getAdminById(@PathVariable Integer adminId) {
+        return ResponseEntity.ok(adminService.getAdminById(adminId));
     }
 
     @GetMapping
-    public ResponseEntity<List<Admin>> getAllAdmins() {
-        List<Admin> admins = adminService.getAllAdmins();
-        return ResponseEntity.ok(admins);
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<List<AdminResponseDTO>> getAllAdmins() {
+        return ResponseEntity.ok(adminService.getAllAdmins());
     }
 
-    // Get Admin by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Admin> getAdminById(@PathVariable Integer id) {
-        Admin admin = adminService.getAdminById(id);
-        return ResponseEntity.ok(admin);
+    @PutMapping("/{adminId}")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or (#adminId == principal.id)")
+    public ResponseEntity<AdminResponseDTO> updateAdmin(
+            @PathVariable Integer adminId,
+            @Valid @RequestBody AdminDTO adminDTO) {
+        return ResponseEntity.ok(adminService.updateAdmin(adminId, adminDTO));
     }
 
-    // Update Admin
-    @PutMapping("/{id}")
-    public ResponseEntity<Admin> updateAdmin(@PathVariable Integer id, @RequestBody Admin adminDetails) {
-        Admin updatedAdmin = adminService.updateAdmin(id, adminDetails);
-        return ResponseEntity.ok(updatedAdmin);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAdmin(@PathVariable Integer id) {
-        adminService.deleteAdmin(id);
+    @DeleteMapping("/{adminId}")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<Void> deleteAdmin(@PathVariable Integer adminId) {
+        adminService.deleteAdmin(adminId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{adminId}/activate")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<AdminResponseDTO> activateAdmin(@PathVariable Integer adminId) {
+        return ResponseEntity.ok(adminService.activateAdmin(adminId));
+    }
+
+    @PostMapping("/{adminId}/deactivate")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<AdminResponseDTO> deactivateAdmin(@PathVariable Integer adminId) {
+        return ResponseEntity.ok(adminService.deactivateAdmin(adminId));
+    }
+
+    @GetMapping("/username/{username}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('SUPER_ADMIN')")
+    public ResponseEntity<AdminResponseDTO> getAdminByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(adminService.getAdminByUsername(username));
     }
 }
