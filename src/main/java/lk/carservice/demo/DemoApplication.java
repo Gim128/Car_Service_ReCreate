@@ -2,8 +2,12 @@ package lk.carservice.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
+@EntityScan("lk.carservice.demo.entity")
+@EnableJpaRepositories("lk.carservice.demo.repository")
 public class DemoApplication {
 
 	public static void main(String[] args) {

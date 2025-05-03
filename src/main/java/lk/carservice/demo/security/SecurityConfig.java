@@ -1,79 +1,131 @@
 package lk.carservice.demo.security;
 
+import jakarta.servlet.Filter;
 import lk.carservice.demo.entity.User;
 import lk.carservice.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import static org.springframework.security.config.Customizer.withDefaults;
 
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+//    public SecurityConfig(@Lazy JwtAuthenticationFilter jwtAuthenticationFilter, JwtAuthenticationEntryPoint unauthorizedHandler) {
+//        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+//        this.unauthorizedHandler = unauthorizedHandler;
+//    }
+
+    private final JwtAuthenticationEntryPoint unauthorizedHandler;
+    private final JwtTokenProvider tokenProvider;
+    private final CustomUserDetailsService customUserDetailsService;
+//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+//    private final AuthenticationProvider authenticationProvider;
+
+
 
     @Autowired
-    private UserRepository userRepository;
+    public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler,
+                          JwtTokenProvider tokenProvider,
+                          CustomUserDetailsService customUserDetailsService) {
+        this.unauthorizedHandler = unauthorizedHandler;
+        this.tokenProvider = tokenProvider;
+        this.customUserDetailsService = customUserDetailsService;
+//        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+//        this.authenticationProvider = authenticationProvider1 ;
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(tokenProvider, customUserDetailsService);
+    }
+
+
+
+//    @Bean
+//    public JwtAuthenticationFilter jwtAuthenticationFilter(
+//            JwtTokenProvider tokenProvider,
+//            CustomUserDetailsService customUserDetailsService) {
+//
+//        return new JwtAuthenticationFilter(tokenProvider, customUserDetailsService);
+//    }
+
+//    @Autowired
+//    private UserRepository userRepository;
+//
+//    @Autowired
+//    private JwtAuthenticationEntryPoint unauthorizedHandler;
+//
+//    @Bean
+//    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+//        return new JwtAuthenticationFilter();
+//    }
+
+//    private final JwtAuthenticationEntryPoint unauthorizedHandler;
+//        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+//
+//        public SecurityConfig(JwtAuthenticationEntryPoint unauthorizedHandler, JwtTokenProvider tokenProvider, CustomUserDetailsService customUserDetailsService,
+//                              JwtAuthenticationFilter jwtAuthenticationFilter) {
+//            this.unauthorizedHandler = unauthorizedHandler;
+//            this.tokenProvider = tokenProvider;
+//            this.customUserDetailsService = customUserDetailsService;
+//            this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+//        }
+
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/signup").permitAll() // Allow signup for everyone
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // Admin-only endpoints
-                        .requestMatchers("/user/**").hasRole("USER") // User-only endpoints
-
+                        .requestMatchers("/users/signup").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/api/admins").hasRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/admins").hasRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/admins/**").hasAnyRole("SUPER_ADMIN", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/admins/**").hasRole("SUPER_ADMIN")
-                        .anyRequest().authenticated() // All other requests require authentication
+                        .anyRequest().authenticated()
                 )
-                .httpBasic(withDefaults())
-
-
-                .formLogin(form -> form
-                        .loginPage("/login") // Custom login page
-                        .defaultSuccessUrl("/redirect", true) // Redirect based on role
-                        .permitAll() // Allow everyone to access the login page
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(unauthorizedHandler)
                 )
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/login") // Redirect to login page after logout
-                        .permitAll() // Allow everyone to access the logout endpoint
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
-
-
+//                .authenticationProvider(authenticationProvider)
+//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return email -> {
-            User user = userRepository.findByUsername(userRepository.toString())
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-            return org.springframework.security.core.userdetails.User
-                    .withUsername(user.getEmail())
-                    .password(user.getPassword())
-                    .roles(user.getRole().name())
-                    .build();
-        };
-    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }
