@@ -71,10 +71,10 @@ public class User {
 //                .collect(Collectors.toList());
 //    }
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     private String address;
 
-    @Column(name = "mobile", nullable = false)
+    @Column(name = "mobile")
     private String mobile;
 
 

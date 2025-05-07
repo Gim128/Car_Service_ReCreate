@@ -39,11 +39,11 @@ public class UserPrincipal implements UserDetails {
     }
 
     private UserPrincipal userPrincipal;
-    Authentication auth = new UsernamePasswordAuthenticationToken(
-            userPrincipal,
-            null,
-            userPrincipal.getAuthorities()
-    );
+//    Authentication auth = new UsernamePasswordAuthenticationToken(
+//            userPrincipal,
+//            userPrincipal.getPassword(),
+//            userPrincipal.getAuthorities()
+//    );
 
     public static UserPrincipal create(User user) {
         List<GrantedAuthority> authorities = user.getRoles().stream()

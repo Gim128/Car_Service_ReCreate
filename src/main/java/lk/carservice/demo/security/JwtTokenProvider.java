@@ -2,6 +2,7 @@ package lk.carservice.demo.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 //import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +30,19 @@ public class JwtTokenProvider {
     private final int jwtExpirationInMs;
 
     public JwtTokenProvider(
-            @Value("W15U3VwZXJTZWNyZXRLZXkxMjMhQCM=") String jwtSecret,
+            @Value("bh/78wA8fsaRJXDePqyd4/3LKxtcFqlWkw0GFT8obg9SHHxgpgJ63LkdQ2viHGsaiPxtoQtwq+eseDVPeuGW3g==") String jwtSecret,
             @Value("86400000") int jwtExpirationInMs){
+//        this.jwtSecret = jwtSecret;
+//        this.jwtExpirationInMs = jwtExpirationInMs;
+
+//        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+//        String base64Key = Encoders.BASE64.encode(key.getEncoded());
+//        System.out.println(base64Key);
         this.jwtSecret = jwtSecret;
         this.jwtExpirationInMs = jwtExpirationInMs;
     }
+
+
 
 
 //    @Value("${app.jwtSecret}")

@@ -8,6 +8,10 @@ public class UserDTO {
 
     @NotBlank(message = "First name is required")
     @Size(max = 50, message = "First name must be less than 50 characters")
+    private String userName;
+
+    @NotBlank(message = "First name is required")
+    @Size(max = 50, message = "First name must be less than 50 characters")
     private String firstName;
 
     @NotBlank(message = "Last name is required")
