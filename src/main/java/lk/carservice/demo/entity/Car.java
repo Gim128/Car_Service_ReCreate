@@ -51,9 +51,20 @@ public class Car {
     @Size(max = 30, message = "Color must be less than 30 characters")
     private String color;
 
+    @Column(name = "Condition")
+    private String condition;
+
     @Column(name = "mileage")
     @Min(value = 0, message = "Mileage cannot be negative")
     private Integer mileage;
+
+    @Column(name = "price")
+    @Min(value = 0, message = "Price cannot be null")
+    private Integer price;
+
+    @Column(name = "Description")
+    @Size(max = 100, message = "minimum characters 30")
+    private String description;
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
